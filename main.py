@@ -51,7 +51,8 @@ class Slider:
         self.SLIDER_HEIGHT = h
 
     def draw_slider(self):
-        pygame.draw.rect(screen, self.SLIDER_COLOR, (self.slider_x, self.slider_y, self.SLIDER_WIDTH, self.SLIDER_HEIGHT))
+        pygame.draw.rect(screen, self.SLIDER_COLOR, (self.slider_x, self.slider_y, self.SLIDER_WIDTH,
+                                                     self.SLIDER_HEIGHT))
         pygame.draw.rect(screen, self.THUMB_COLOR, (self.thumb_x, self.thumb_y, self.THUMB_WIDTH, self.THUMB_HEIGHT))
 
 
