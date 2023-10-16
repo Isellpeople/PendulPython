@@ -16,7 +16,7 @@ AIR_RESISTANCE = 0.1
 # Initializing window
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Pendul")
+pygame.display.set_caption("Simulare pendul")
 
 font = pygame.font.Font(None, 22)
 mass = 0.4
