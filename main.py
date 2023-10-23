@@ -115,9 +115,11 @@ while running:
             else:
                 input_text += event.unicode
 
+    # Updating the mass and length
     mass = slider1.thumb_x / 100
     PENDULUM_LENGTH = slider2.thumb_x * 2
 
+    # Calculating movement
     inertia = mass * theta * theta
     theta_acceleration = -(GRAVITY / PENDULUM_LENGTH) * math.sin(theta)
     theta_velocity += (theta_acceleration - AIR_RESISTANCE * theta_velocity / mass) * dt
@@ -125,6 +127,7 @@ while running:
 
     screen.fill(BACKGROUND_COLOR)
 
+    # Drawing pendulum
     pendulum_x = int(pivot[0] + PENDULUM_LENGTH * math.sin(theta))
     pendulum_y = int(pivot[1] + PENDULUM_LENGTH * math.cos(theta))
     pygame.draw.line(screen, (0, 0, 0), pivot, (pendulum_x, pendulum_y), 5)
@@ -133,10 +136,10 @@ while running:
     slider1.draw_slider()
     slider2.draw_slider()
 
+    # All text rendered
     text = font.render(f"Masa: {mass * 10:.2f} kg", True, TEXT_COLOR)
     text_rect = text.get_rect()
     text_rect.center = (65, 20)
-
     text_surface = font.render(input_text, True, TEXT_COLOR)
     t = font.render("Unghi teta (grade) : ", True, TEXT_COLOR)
     t_rect = t.get_rect()
