@@ -141,7 +141,7 @@ while running:
     t = font.render("Unghi teta (grade) : ", True, TEXT_COLOR)
     t_rect = t.get_rect()
     t_rect.center = (650, 570)
-    length_text = font.render(f"Lungime curenta : {PENDULUM_LENGTH:.2f}", True, TEXT_COLOR)
+    length_text = font.render(f"Lungime curenta : {PENDULUM_LENGTH:.2f} cm", True, TEXT_COLOR)
     lt_rect = length_text.get_rect()
     lt_rect.center = (110, 80)
     angle_text = font.render(f"Unghi curent : {theta:.2f} rad", True, TEXT_COLOR)
