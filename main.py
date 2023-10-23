@@ -25,11 +25,18 @@ theta = math.pi / 4
 theta_velocity = 0
 pivot = (SCREEN_WIDTH // 2, 100)
 
+# For text box
+input_text = ""
+text_surface = font.render(input_text, True, TEXT_COLOR)
+textbox_rect = text_surface.get_rect()
+textbox_rect.center = (720, 570)
+
 clock = pygame.time.Clock()
 dt = 0.02
 
 
 class Slider:
+    slider_collision = 30
     SLIDER_WIDTH, SLIDER_HEIGHT = 200, 10
     SLIDER_COLOR = (0, 0, 0)
     THUMB_WIDTH, THUMB_HEIGHT = 20, 20
@@ -66,11 +73,21 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        elif event.type == pygame.MOUSEMOTION:
+        elif event.type == pygame.MOUSEMOTION:  # Input for slider
             if event.buttons[0]:
                 x, y = event.pos
                 slider1.thumb_x = min(max(x - slider1.THUMB_WIDTH // 2, slider1.slider_x),
                                       slider1.slider_x + slider1.SLIDER_WIDTH - slider1.THUMB_WIDTH)
+        elif event.type == pygame.KEYDOWN:      # Input for text box
+            if event.key == pygame.K_r:
+                theta = math.pi / 4
+            elif event.key == pygame.K_BACKSPACE:
+                input_text = input_text[:-1]
+            elif event.key == pygame.K_RETURN:
+                PENDULUM_LENGTH = float(input_text)
+                input_text = ""
+            else:
+                input_text += event.unicode
 
     mass = slider1.thumb_x / 100
 
@@ -88,11 +105,26 @@ while running:
 
     slider1.draw_slider()
 
-    text = font.render(f"Masa: {mass:.2f}", True, TEXT_COLOR)
+    text = font.render(f"Masa: {mass * 100:.2f}", True, TEXT_COLOR)
     text_rect = text.get_rect()
     text_rect.center = (57, 20)
 
+    text_surface = font.render(input_text, True, TEXT_COLOR)
+    t = font.render("Lungime pendul : ", True, TEXT_COLOR)
+    t_rect = t.get_rect()
+    t_rect.center = (650, 570)
+    length_text = font.render(f"Lungime curenta : {PENDULUM_LENGTH:.2f}", True, TEXT_COLOR)
+    lt_rect = length_text.get_rect()
+    lt_rect.center = (677, 550)
+    angle_text = font.render(f"Unghi curent : {theta:.2f} rad", True, TEXT_COLOR)
+    at_rect = angle_text.get_rect()
+    at_rect.center = (677, 530)
+
     screen.blit(text, text_rect)
+    screen.blit(text_surface, textbox_rect)
+    screen.blit(t, t_rect)
+    screen.blit(length_text, lt_rect)
+    screen.blit(angle_text, at_rect)
 
     pygame.display.flip()
     clock.tick(FPS)
