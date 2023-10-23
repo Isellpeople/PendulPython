@@ -143,7 +143,7 @@ while running:
     t_rect.center = (650, 570)
     length_text = font.render(f"Lungime curenta : {PENDULUM_LENGTH:.2f} cm", True, TEXT_COLOR)
     lt_rect = length_text.get_rect()
-    lt_rect.center = (110, 80)
+    lt_rect.center = (120, 80)
     angle_text = font.render(f"Unghi curent : {theta:.2f} rad", True, TEXT_COLOR)
     at_rect = angle_text.get_rect()
     at_rect.center = (661, 550)
