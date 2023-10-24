@@ -19,4 +19,5 @@ Simply clone the repository and open the executable in the *dist* folder.
 6. Pressing *o* stops the pendulum's movement completely.
 
 ![Pendulum2](Pendulum2.png)
+
 In this image you can see the simulation working.

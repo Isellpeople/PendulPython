@@ -24,6 +24,7 @@ max_angle = math.pi / 2
 theta = math.pi / 4
 theta_velocity = 0
 pivot = (SCREEN_WIDTH // 2, 150)
+oscillations = 0
 
 # For text box
 input_text = ""
@@ -127,6 +128,11 @@ while running:
 
     screen.fill(BACKGROUND_COLOR)
 
+    # Calculating the number of oscillations
+    time_interval = 1   # in seconds
+    T = 2 * math.pi * math.sqrt((PENDULUM_LENGTH / 100) / GRAVITY)
+    oscillations = T / time_interval
+
     # Drawing pendulum
     pendulum_x = int(pivot[0] + PENDULUM_LENGTH * math.sin(theta))
     pendulum_y = int(pivot[1] + PENDULUM_LENGTH * math.cos(theta))
@@ -156,6 +162,9 @@ while running:
     tutorial_text2 = font.render("'o' -> opreste miscarea", True, TEXT_COLOR)
     tt_rect2 = tutorial_text2.get_rect()
     tt_rect2.center = (84, 570)
+    osc_text = font.render(f"Numarul de oscilatii: {oscillations:.2f}", True, TEXT_COLOR)
+    osc_rect = osc_text.get_rect()
+    osc_rect.center = (671, 530)
 
     screen.blit(text, text_rect)
     screen.blit(text_surface, textbox_rect)
@@ -164,6 +173,7 @@ while running:
     screen.blit(angle_text, at_rect)
     screen.blit(tutorial_text1, tt_rect1)
     screen.blit(tutorial_text2, tt_rect2)
+    screen.blit(osc_text, osc_rect)
 
     pygame.display.flip()
     clock.tick(FPS)
