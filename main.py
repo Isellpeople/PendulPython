@@ -8,17 +8,15 @@ BACKGROUND_COLOR = (255, 255, 255)
 TEXT_COLOR = (0, 0, 0)
 FPS = 120
 
-# For pendulum
-PENDULUM_LENGTH = 200
-GRAVITY = 9.81
-AIR_RESISTANCE = 0.1
-
 # Initializing window
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Simulare pendul")
 
-font = pygame.font.Font(None, 22)
+# For pendulum
+PENDULUM_LENGTH = 200
+GRAVITY = 9.81
+AIR_RESISTANCE = 0.1
 mass = 0.4
 max_angle = math.pi / 2
 theta = math.pi / 4
@@ -27,6 +25,7 @@ pivot = (SCREEN_WIDTH // 2, 150)
 oscillations = 0
 
 # For text box
+font = pygame.font.Font(None, 22)
 input_text = ""
 text_surface = font.render(input_text, True, TEXT_COLOR)
 textbox_rect = text_surface.get_rect()
@@ -68,29 +67,32 @@ class Slider:
 slider1 = Slider()
 slider1.define_length(200, 10)
 slider1.define_position(20, 40)
+dragging1 = False
 
 # Length slider
 slider2 = Slider()
 slider2.define_length(200, 10)
 slider2.define_position(20, 100)
 slider2.thumb_x = 100
+dragging2 = False
 
 running = True
-dragging1 = False
-dragging2 = False
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.MOUSEMOTION:  # Input for slider
+            # Check if user is dragging the mass slider
             if dragging1:
                 x, y = event.pos
                 slider1.thumb_x = min(max(x - slider1.THUMB_WIDTH // 2, slider1.slider_x),
                                       slider1.slider_x + slider1.SLIDER_WIDTH - slider1.THUMB_WIDTH)
+            # Check if user is dragging the length slider
             if dragging2:
                 x, y = event.pos
                 slider2.thumb_x = min(max(x - slider2.THUMB_WIDTH // 2, slider2.slider_x),
                                       slider2.slider_x + slider2.SLIDER_WIDTH - slider2.THUMB_WIDTH)
+        # Interaction with slider
         elif event.type == pygame.MOUSEBUTTONDOWN:
             x, y = event.pos
             thumb_rect1 = pygame.Rect(slider1.thumb_x, slider1.thumb_y, slider1.THUMB_WIDTH, slider1.THUMB_HEIGHT)
@@ -102,7 +104,8 @@ while running:
         elif event.type == pygame.MOUSEBUTTONUP:
             dragging1 = False
             dragging2 = False
-        elif event.type == pygame.KEYDOWN:      # Input for text box
+        # Input for text box
+        elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_r:
                 theta = math.pi / 4
             elif event.key == pygame.K_o:
@@ -126,12 +129,16 @@ while running:
     theta_velocity += (theta_acceleration - AIR_RESISTANCE * theta_velocity / mass) * dt
     theta += theta_velocity * dt * 100
 
+    # Setting the background
     screen.fill(BACKGROUND_COLOR)
 
-    # Calculating the number of oscillations
+    # Calculating the number of oscillations (frequency)
     time_interval = 1   # in seconds
     T = 2 * math.pi * math.sqrt((PENDULUM_LENGTH / 100) / GRAVITY)
     oscillations = T / time_interval
+
+    # Angular velocity (pulsatie)
+    omega = (2 * math.pi) / T
 
     # Drawing pendulum
     pendulum_x = int(pivot[0] + PENDULUM_LENGTH * math.sin(theta))
@@ -139,33 +146,45 @@ while running:
     pygame.draw.line(screen, (0, 0, 0), pivot, (pendulum_x, pendulum_y), 5)
     pygame.draw.circle(screen, (0, 0, 0), (pendulum_x, pendulum_y), 15)
 
+    # Drawing the sliders
     slider1.draw_slider()
     slider2.draw_slider()
 
-    # All text rendered
+    # Text
+    # Angular velocity
+    av_text = font.render(f"Pulsatia: {omega:.2f} rad / s", True, TEXT_COLOR)
+    av_rect = av_text.get_rect()
+    av_rect.center = (651, 513)
+    # Mass
     text = font.render(f"Masa: {mass * 10:.2f} kg", True, TEXT_COLOR)
     text_rect = text.get_rect()
     text_rect.center = (65, 20)
     text_surface = font.render(input_text, True, TEXT_COLOR)
+    # Initial angle
     t = font.render("Unghi teta (grade) : ", True, TEXT_COLOR)
     t_rect = t.get_rect()
     t_rect.center = (650, 570)
+    # Length
     length_text = font.render(f"Lungime curenta : {PENDULUM_LENGTH:.2f} cm", True, TEXT_COLOR)
     lt_rect = length_text.get_rect()
     lt_rect.center = (120, 80)
+    # Current angle
     angle_text = font.render(f"Unghi curent : {theta:.2f} rad", True, TEXT_COLOR)
     at_rect = angle_text.get_rect()
     at_rect.center = (661, 550)
+    # Press the 'r' key
     tutorial_text1 = font.render("'r'  -> reseteaza la unghi de 45°", True, TEXT_COLOR)
     tt_rect1 = tutorial_text1.get_rect()
     tt_rect1.center = (117, 550)
+    # Press the 'o' key
     tutorial_text2 = font.render("'o' -> opreste miscarea", True, TEXT_COLOR)
     tt_rect2 = tutorial_text2.get_rect()
     tt_rect2.center = (84, 570)
+    # Number of oscillations
     osc_text = font.render(f"Numarul de oscilatii: {oscillations:.2f}", True, TEXT_COLOR)
     osc_rect = osc_text.get_rect()
     osc_rect.center = (671, 530)
-
+    # Rendering
     screen.blit(text, text_rect)
     screen.blit(text_surface, textbox_rect)
     screen.blit(t, t_rect)
@@ -174,6 +193,7 @@ while running:
     screen.blit(tutorial_text1, tt_rect1)
     screen.blit(tutorial_text2, tt_rect2)
     screen.blit(osc_text, osc_rect)
+    screen.blit(av_text, av_rect)
 
     pygame.display.flip()
     clock.tick(FPS)
